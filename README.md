@@ -4,7 +4,6 @@
 
 The WishList4U API was built for use with wishlist4u-client ([repo](https://github.com/jyip01/wishlist4u-client)/[live app](https://wishlist4u-client.vercel.app/))).
 
-## Documentation 
 
 ### Base URL
 
@@ -27,6 +26,9 @@ A live version of the app can be accessed [here](https://wishlist4u-client.verce
 To demo WishList4U, log in with: 
 * User Name: Test_User
 * Password: P@ssword1
+
+## Summary
+WishList4U is a web application that allows users to create wishlists for themselves. For example, you can create a list for your birthday or for your children's birthday and continue to add until the day comes. The goal of WishList4U is to make it easy to keep track of your wants or needs. 
 
 ### Technologies Used
 
