@@ -62,8 +62,8 @@ listsRouter
 listsRouter
   .route('/users/:user_id')
   //get all lists that were posted by a specific user
-  //.all(requireAuth)
-  //.all(checkListExists)
+  .all(requireAuth)
+  .all(checkListExists)
   .get((req, res, next) => {
     ListsService.getByUserId(
       req.app.get('db'),
