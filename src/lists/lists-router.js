@@ -9,11 +9,11 @@ const jsonBodyParser = express.json()
 listsRouter
   .route('/')
   .get((req, res, next) => {
-      ListsService.getAllLists(req.app.get('db'))
-        .then(lists => {
-            res.json(ListsService.serializeLists(lists))
-        })
-        .catch(next)
+    ListsService.getAllLists(req.app.get('db'))
+      .then(lists => {
+        res.json(ListsService.serializeLists(lists))
+      })
+      .catch(next)
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
     const { list_title, list_description } = req.body
@@ -22,7 +22,7 @@ listsRouter
     for(const [key, value] of Object.entries(newList))
     if (value == null)
       return res.status(400).json({
-          error: `Missing '${key}' in request body`
+        error: `Missing '${key}' in request body`
       })
 
     newList.user_id = req.user.id
@@ -31,13 +31,13 @@ listsRouter
       req.app.get('db'),
       newList
     )
-      .then(list => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${list.id}`))
-          .json(ListsService.serializeList(list))
-      })
-      .catch(next)
+    .then(list => {
+      res
+        .status(201)
+        .location(path.posix.join(req.originalUrl, `/${list.id}`))
+        .json(ListsService.serializeList(list))
+    })
+    .catch(next)
   })
   
 
@@ -46,7 +46,7 @@ listsRouter
   .all(requireAuth)
   .all(checkListExists)
   .get((req, res) => {
-      res.json(ListsService.serializeList(res.list))
+    res.json(ListsService.serializeList(res.list))
   })
   .delete((req, res, next) => {
     ListsService.deleteList(
@@ -57,6 +57,22 @@ listsRouter
       res.status(204).end()
     })
     .catch(next)
+  })
+
+listsRouter
+  .route('/users/:user_id')
+  //get all lists that were posted by a specific user
+  //.all(requireAuth)
+  //.all(checkListExists)
+  .get((req, res, next) => {
+    ListsService.getByUserId(
+      req.app.get('db'),
+      req.params.user_id
+    )
+      .then(lists => {
+        res.json(lists.map(ListsService.serializeWishLists))
+      })
+      .catch(next)
   })
 
 listsRouter
@@ -74,7 +90,6 @@ listsRouter
         .catch(next)
   })
 
-  
 async function checkListExists(req, res, next) {
     try {
         console.log('middleware')
@@ -95,4 +110,4 @@ async function checkListExists(req, res, next) {
     }
 }
 
-module.exports = listsRouter
+module.exports = listsRouter;

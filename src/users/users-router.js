@@ -52,4 +52,4 @@ usersRouter
       .catch(next)
   })
 
-module.exports = usersRouter
+module.exports = usersRouter;

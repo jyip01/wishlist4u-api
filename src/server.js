@@ -6,6 +6,13 @@ const {PORT, DATABASE_URL} = require('./config')
 
 const db = knex({
   client: 'pg',
+  /*connection:{
+    host: '127.0.0.1', 
+    port: 5432, 
+    database: 'wishlist', 
+    username: 'jyip', 
+    password: '1234',
+  }*/
   connection: DATABASE_URL
 })
 

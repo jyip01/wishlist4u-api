@@ -168,19 +168,19 @@ function cleanTables(db) {
     return db.transaction(trx => 
         trx.raw(
             `TRUNCATE
+              wishlist_wishes,
               wishlist_lists,
-              wishlist_users,
-              list_wishes
+              wishlist_users
             `
         )
         .then(() => 
           Promise.all([
+            trx.raw(`ALTER SEQUENCE wishlist_wishes_id_seq minvalue 0 START WITH 1`),
             trx.raw(`ALTER SEQUENCE wishlist_lists_id_seq minvalue 0 START WITH 1`),
             trx.raw(`ALTER SEQUENCE wishlist_users_id_seq minvalue 0 START WITH 1`),
-            trx.raw(`ALTER SEQUENCE wishlist_wishes_id_seq minvalue 0 START WITH 1`),
+            trx.raw(`SELECT setval('wishlist_wishes_id_seq', 0)`),
             trx.raw(`SELECT setval('wishlist_lists_id_seq', 0)`),
             trx.raw(`SELECT setval('wishlist_users_id_seq', 0)`),
-            trx.raw(`SELECT setval('wishlist_wishes_id_seq', 0)`),
           ])
         )
     )

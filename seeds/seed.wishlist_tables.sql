@@ -1,10 +1,9 @@
 BEGIN;
 
 TRUNCATE
-  wishlist_lists,
   wishlist_wishes,
-  wishlist_users
-RESTART IDENTITY CASCADE;
+  wishlist_lists,
+  wishlist_users RESTART IDENTITY CASCADE;
 
 INSERT INTO wishlist_users (preferred_name, user_name, password)
 VALUES
