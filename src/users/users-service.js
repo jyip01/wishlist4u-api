@@ -4,13 +4,6 @@ const xss = require('xss')
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 
 const UsersService = {
-    hasUserWithUserName(db, user_name) {
-        return db('wishlist_users')
-          .where({user_name})
-          .first()
-          .then(user => !!user)
-    },
-
     insertUser(db, newUser) {
         return db
           .insert(newUser)
@@ -39,6 +32,13 @@ const UsersService = {
         return bcrypt.hash(password, 12)
     },
 
+    hasUserWithUserName(db, user_name) {
+        return db('wishlist_users')
+          .where({user_name})
+          .first()
+          .then(user => !!user)
+    },
+
     serializeUser(user) {
         return {
             id: user.id,
@@ -46,7 +46,7 @@ const UsersService = {
             user_name: xss(user.user_name),
             signup_date: new Date(user.signup_date),
         }
-    },
+    }
 }
 
 module.exports = UsersService

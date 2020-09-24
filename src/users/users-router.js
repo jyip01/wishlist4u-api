@@ -6,8 +6,9 @@ const usersRouter = express.Router()
 const jsonBodyParser = express.json()
 
 usersRouter
-  .post('/', jsonBodyParser, (req, res, next) => {
-    const { password, user_name, preferred_name } = req.body
+  .route('/')
+  .post(jsonBodyParser, (req, res, next) => {
+    const { preferred_name, user_name, password } = req.body
 
     for (const field of ['preferred_name', 'user_name', 'password'])
       if (!req.body[field])
@@ -31,9 +32,9 @@ usersRouter
         return UsersService.hashPassword(password)
           .then(hashedPassword => {
               const newUser = {
+                  preferred_name,
                   user_name,
                   password: hashedPassword,
-                  preferred_name,
                   signup_date: 'now()',
               }
 

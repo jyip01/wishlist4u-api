@@ -20,14 +20,12 @@ listsRouter
     const newList = { list_title, list_description }
 
     for(const [key, value] of Object.entries(newList))
-    if (value == null)
-      return res.status(400).json({
-        error: `Missing '${key}' in request body`
-      })
+      if (value == null)
+        return res.status(400).json({
+          error: `Missing '${key}' in request body`
+        })
 
-    newList.user_id = req.user.id
-
-    ListsService.insertList(
+    return ListsService.insertList(
       req.app.get('db'),
       newList
     )
@@ -45,34 +43,31 @@ listsRouter
   .route('/:list_id')
   .all(requireAuth)
   .all(checkListExists)
-  .get((req, res) => {
-    res.json(ListsService.serializeList(res.list))
+  .get((req, res, next) => {
+    ListsService.getById(
+      req.app.get('db'),
+      req.params.list_id
+    )
+    .then(list=>{
+      res.json(ListsService.serializeList(list))
+    })
+    .catch((error)=>{
+      console.log(error)
+      next()
+    })
   })
+  //patch request??
   .delete((req, res, next) => {
     ListsService.deleteList(
       req.app.get('db'),
       req.params.list_id
     )
-    .then(numRowsAffected => {
-      res.status(204).end()
+    .then(/*_numRowsAffected*/lists => {
+      res
+        .status(204)
+        .end()
     })
     .catch(next)
-  })
-
-listsRouter
-  .route('/users/:user_id')
-  //get all lists that were posted by a specific user
-  .all(requireAuth)
-  .all(checkListExists)
-  .get((req, res, next) => {
-    ListsService.getByUserId(
-      req.app.get('db'),
-      req.params.user_id
-    )
-      .then(lists => {
-        res.json(lists.map(ListsService.serializeWishLists))
-      })
-      .catch(next)
   })
 
 listsRouter
@@ -89,6 +84,22 @@ listsRouter
         })
         .catch(next)
   })
+
+/*listsRouter
+  .route('/users/:user_id')
+  //get all lists that were posted by a specific user
+  .all(requireAuth)
+  .all(checkListExists)
+  .get((req, res, next) => {
+    ListsService.getByUserId(
+      req.app.get('db'),
+      req.params.user_id
+    )
+      .then(lists => {
+        res.json(lists.map(ListsService.serializeWishLists))
+      })
+      .catch(next)
+  })*/
 
 async function checkListExists(req, res, next) {
     try {

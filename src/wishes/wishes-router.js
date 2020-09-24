@@ -52,7 +52,7 @@ wishesRouter
       })
       .catch(next)
   })
-  .get((req, res, next) => {
+  .get((_req, res, _next) => {
     res.json(WishesService.serializeWish(res.wish))
   })
   .delete((req, res, next) => {
@@ -60,7 +60,7 @@ wishesRouter
       req.app.get('db'),
       req.params.wish_id
     )
-      .then(numRowsAffected => {
+      .then(_numRowsAffected => {
         res.status(204).end()
       })
       .catch(next)
@@ -80,7 +80,7 @@ wishesRouter
       req.params.wish_id,
       wishToUpdate
     )
-      .then(numRowsAffected => {
+      .then(_numRowsAffected => {
         res.status(204).end()
       })
       .catch(next)
