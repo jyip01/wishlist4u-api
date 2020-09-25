@@ -9,6 +9,7 @@ const jsonBodyParser = express.json()
 listsRouter
   .route('/')
   .get((req, res, next) => {
+    console.log(req.app.get('db').client.connectionSettings)
     ListsService.getAllLists(req.app.get('db'))
       .then(lists => {
         res.json(ListsService.serializeLists(lists))
@@ -16,8 +17,8 @@ listsRouter
       .catch(next)
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { list_title, list_description } = req.body
-    const newList = { list_title, list_description }
+    const { list_title, list_description, user_id } = req.body
+    const newList = { list_title, list_description, user_id }
 
     for(const [key, value] of Object.entries(newList))
       if (value == null)
@@ -85,21 +86,22 @@ listsRouter
         .catch(next)
   })
 
-/*listsRouter
+listsRouter
   .route('/users/:user_id')
   //get all lists that were posted by a specific user
-  .all(requireAuth)
-  .all(checkListExists)
+  //.all(requireAuth)
+  //.all(checkListExists)
   .get((req, res, next) => {
     ListsService.getByUserId(
       req.app.get('db'),
       req.params.user_id
     )
       .then(lists => {
-        res.json(lists.map(ListsService.serializeWishLists))
+        //res.json(lists.map(ListsService.serializeWishLists))
+        res.json(lists)
       })
       .catch(next)
-  })*/
+  })
 
 async function checkListExists(req, res, next) {
     try {

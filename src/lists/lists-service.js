@@ -14,10 +14,11 @@ const ListsService = {
             .first()
     },
 
-    getByUser(db, user_name) {
-        return ListsService.getAllLists(db)
-            .where('usr.user_name', user_name)
-            .first()
+    getByUserId(db, user_id) { 
+        return db 
+        .from('wishlist_lists') 
+        .where('user_id', user_id) 
+        .select('*') 
     },
 
     getWishesForList(db, list_id) {
