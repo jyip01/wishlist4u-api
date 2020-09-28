@@ -15,7 +15,9 @@ const morganOption = NODE_ENV === "production"
   : "common";
 
 app.use(morgan(morganOption));
-app.use(cors());
+app.use(cors({
+  origin: 'https://wishlist4u-client.vercel.app'
+}));
 app.use(helmet());
 
 app.use("/api/lists", listsRouter);
